@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Bookings Viewer</title>
+  <style>
+    :root {
+      --primary-color: #4CAF50;
+      --secondary-color: #f8f9fa;
+      --text-color: #333;
+      --border-color: #ddd;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--secondary-color);
+      color: var(--text-color);
+    }
+
+    header {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 1rem 0;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+
+    #bookings-container {
+      margin: 2rem auto;
+      padding: 1rem;
+      width: 90%;
+      max-width: 800px;
+    }
+
+    .booking-card {
+      background: white;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      border-left: 4px solid var(--primary-color);
+    }
+
+    .booking-card h3 {
+      margin-top: 0;
+      color: var(--primary-color);
+    }
+
+    .booking-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 0.5rem;
+    }
+
+    .detail {
+      margin: 0.25rem 0;
+    }
+
+    .detail strong {
+      display: inline-block;
+      min-width: 80px;
+    }
+
+    .no-bookings {
+      text-align: center;
+      padding: 2rem;
+      color: #666;
+    }
+
+    @media (max-width: 600px) {
+      .booking-details {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Live Bookings Viewer</h1>
+  </header>
+
+  <main id="bookings-container">
+    <div id="no-bookings" class="no-bookings">Waiting for bookings...</div>
+    <div id="bookings-list"></div>
+  </main>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    const bookingsList = document.getElementById('bookings-list');
+    const noBookingsMsg = document.getElementById('no-bookings');
+
+    socket.on('initial-bookings', (bookings) => {
+      if (bookings.length > 0) {
+        noBookingsMsg.style.display = 'none';
+        bookings.forEach(booking => {
+          addBookingToDOM(booking);
+        });
+      }
+    });
+
+    socket.on('new-booking', (booking) => {
+      if (noBookingsMsg.style.display !== 'none') {
+        noBookingsMsg.style.display = 'none';
+      }
+      addBookingToDOM(booking);
+    });
+
+    function addBookingToDOM(booking) {
+      const bookingElement = document.createElement('div');
+      bookingElement.className = 'booking-card';
+      bookingElement.innerHTML = `
+        <h3>${booking.venueName}</h3>
+        <div class="booking-details">
+          <div class="detail"><strong>Party Size:</strong> ${booking.partySize}</div>
+          <div class="detail"><strong>Date:</strong> ${booking.date}</div>
+          <div class="detail"><strong>Time:</strong> ${booking.time}</div>
+          <div class="detail"><strong>ID:</strong> ${booking.bookingId}</div>
+        </div>
+      `;
+      
+      bookingsList.insertBefore(bookingElement, bookingsList.firstChild);
+    }
+  </script>
+</body>
+</html>
