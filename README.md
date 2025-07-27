@@ -1,6 +1,8 @@
 # Live Bookings Viewer
 📌 Overview The Live Bookings Viewer is a real-time web application designed for venue administrators to monitor incoming bookings instantly. This full-stack application demonstrates real-time data flow between server and client using Socket.IO, with a clean, responsive interface for optimal user experience.
 
+## Demo Video - https://shorturl.at/v2jK3
+
 # 🛠️ Technology Stack
 ## Backend
 - Node.js with Express framework
@@ -34,6 +36,3 @@
 - New bookings appear at the top of the list in real-time
 
 - All connected clients stays in sync
-
-
-## Demo Video - https://shorturl.at/v2jK3
