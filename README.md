@@ -19,7 +19,7 @@
 - Socket.IO client library
 
 ## Installation
-1. Clone the repository
+1. Clone the repository: ``` git clone https://github.com/DeepakPatil05/live-bookings-viewer.git ```
 2. Install dependencies: ``` npm install express socket.io ```
 4. Run the server: ``` node server.js ```
 5. Open your browser at http://localhost:3000
